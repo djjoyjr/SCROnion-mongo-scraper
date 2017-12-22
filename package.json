@@ -17,11 +17,14 @@
   },
   "homepage": "https://github.com/djjoyjr/mongoscraper#readme",
   "dependencies": {
+    "axios": "^0.17.1",
     "body-parser": "^1.18.2",
+    "bulma": "^0.6.1",
     "cheerio": "^1.0.0-rc.2",
     "express": "^4.16.2",
     "express-handlebars": "^3.0.0",
     "mongoose": "^4.13.7",
+    "morgan": "^1.9.0",
     "request": "^2.83.0"
   }
 }

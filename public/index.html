@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Scraping With Mongoose</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="app.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.1/css/bulma.css">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Gravitas+One" rel="stylesheet">
+  </head>
+  <body>
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a class="navbar-item" href="#">
+        <img src="./images/onionlogo.png" alt="The SCRonion - or scraped Onion" width="112" height="28">
+        </a>
+        <div class="navbar-start">
+  			<span><button class="button is-success is-medium" id="home">Home</button></span>
+  			<span><a href="/api/saved"><button class="button is-success is-medium" id="allBooks">Saved Articles</button></a></span>
+  			<span><a href="/scrape"><button class="button is-success is-medium" id="keepBooks">Scrape New Articles</button></a></span>
+  		  </div>
+      </div>
+    </nav>
+
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title">
+          The SCROnion
+        </h1>
+        <h2 class="subtitle">
+          America's Finest News Scrapings
+        </h2>
+      </div>
+    </div>
+  </section>
+
+    <div id="wrapper">
+      <div id="articles">
+        <section class="section">
+          <div class="container">
+          </div>
+        </section>
+      </div>
+      <div id="notes"></div>
+    </div>
+  </body>
+</html>

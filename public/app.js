@@ -1,13 +1,22 @@
 // Grab the articles as a json
-$.getJSON("/articles", function(data) {
-  console.log(data);
+$.getJSON("/api/articles", function(data) {
   // For each one
   for (var i = 0; i < data.length; i++) {
     // Display the apropos information on the page
-    $("#articles").append("<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + data[i].link + "</p>");
+    $("#articles").append(`<a href=${ data[i].link}>${data[i].title}</a>`);
+    $("#articles").append(`<button id="save-status" class="is-small" data-id=${data[i]._id}>Save Article</button>`);
+    $("#articles").append("<p>" + data[i].excerpt +"</p><hr>");
   }
 });
 
+$.getJSON("/api/saved", function(data) {
+  for (var i = 0; i < data.length; i++) {
+      $("#saved").append(`<a href=${ data[i].link}>${data[i].title}</a>`);
+      $("#saved").append(`<button id="save-status" class="is-small" data-id=${data[i]._id}>Delete From Saved</button>`);
+      $("#saved").append(`<button id="article-notes" class="is-small" data-id=${data[i]._id}>Article Notes</button>`);
+      $("#saved").append("<p>" + data[i].excerpt +"</p><hr>");
+  }
+});
 
 // Whenever someone clicks a p tag
 $(document).on("click", "p", function() {
@@ -43,31 +52,23 @@ $(document).on("click", "p", function() {
     });
 });
 
-// When you click the savenote button
-$(document).on("click", "#savenote", function() {
+// When you click the save-status button
+$(document).on("click", "#save-status", function() {
   // Grab the id associated with the article from the submit button
   var thisId = $(this).attr("data-id");
-
+  console.log("this is the id being passed on button click: " + thisId);
   // Run a POST request to change the note, using what's entered in the inputs
   $.ajax({
     method: "POST",
-    url: "/articles/" + thisId,
+    url: "/api/saved/" + thisId,
     data: {
-      // Value taken from title input
-      title: $("#titleinput").val(),
-      // Value taken from note textarea
-      body: $("#bodyinput").val()
+      id: thisId
     }
   })
     // With that done
     .done(function(data) {
-      // Log the response
+      location.reload();
       console.log(data);
-      // Empty the notes section
-      $("#notes").empty();
     });
 
-  // Also, remove the values entered in the input and textarea for note entry
-  $("#titleinput").val("");
-  $("#bodyinput").val("");
 });

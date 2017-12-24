@@ -1,25 +1,29 @@
+var count = 0;
+
 // Grab the articles as a json
 $.getJSON("/api/articles", function(data) {
   // For each one
   for (var i = 0; i < data.length; i++) {
     // Display the apropos information on the page
+    $("#articles").append(`<button id="save-status" class="button is-medium" data-id=${data[i]._id}>Save Article</button>`);
     $("#articles").append(`<a href=${ data[i].link}>${data[i].title}</a>`);
-    $("#articles").append(`<button id="save-status" class="is-small" data-id=${data[i]._id}>Save Article</button>`);
     $("#articles").append("<p>" + data[i].excerpt +"</p><hr>");
   }
+  console.log("data.length of scrape:" +data.length);
+  count = data.length;
 });
 
 $.getJSON("/api/saved", function(data) {
   for (var i = 0; i < data.length; i++) {
       $("#saved").append(`<a href=${ data[i].link}>${data[i].title}</a>`);
-      $("#saved").append(`<button id="save-status" class="is-small" data-id=${data[i]._id}>Delete From Saved</button>`);
-      $("#saved").append(`<button id="article-notes" class="is-small" data-id=${data[i]._id}>Article Notes</button>`);
+      $("#saved").append(`<button id="save-status" class="button is-medium" data-id=${data[i]._id}>Delete From Saved</button>`);
+      $("#saved").append(`<button id="article-notes" class="button is-medium" data-id=${data[i]._id}>Article Notes</button>`);
       $("#saved").append("<p>" + data[i].excerpt +"</p><hr>");
   }
 });
 
 // Whenever someone clicks a p tag
-$(document).on("click", "p", function() {
+$(document).on("click", "#article-notes", function() {
   // Empty the notes from the note section
   $("#notes").empty();
   // Save the id from the p tag
@@ -28,7 +32,7 @@ $(document).on("click", "p", function() {
   // Now make an ajax call for the Article
   $.ajax({
     method: "GET",
-    url: "/articles/" + thisId
+    url: "/api/articles/" + thisId
   })
     // With that done, add the note information to the page
     .done(function(data) {

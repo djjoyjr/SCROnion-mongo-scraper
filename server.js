@@ -40,11 +40,11 @@ app.get("/", function(req, res) {
   res.sendFile(path.join(__dirname, "./public/index.html"));
 });
 
-
 app.get("/saved", function (req, res) {
   res.sendFile(path.join(__dirname, "./public/saved.html"));
 });
 
+var count = 0;
 // A GET route for scraping the echojs website
 app.get("/scrape", function(req, res) {
   // First, we grab the body of the html with request
@@ -74,16 +74,17 @@ app.get("/scrape", function(req, res) {
       // Create a new Article using the `result` object built from scraping
       db.Article
         .create(result)
-        .then(function(dbArticle) {
+        .then(function (dbArticle) {
           // If we were able to successfully scrape and save an Article, send a message to the client
-          res.redirect("/");
         })
         .catch(function(err) {
           // If an error occurred, send it to the client
           res.json(err);
         });
+        count = i+1;
     });
-    console.log("Scrape Complete");
+    console.log("Number of articles scraped: " + count);
+    // res.redirect("/");
   });
 });
 

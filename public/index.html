@@ -43,8 +43,36 @@
     </div>
     <div class="column is-narrow"></div>
   </div>
-
-
       <div id="notes"></div>
+
+      <!--Search Confirmation Modal -->
+  <div id="search-count" class="modal">
+    <div class="modal-background">
+      <div class="modal-card">
+        <title>Search Results Count</title>
+        <div class="search-modal-content">
+        </div>
+      </div>
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+  </div>
+
   </body>
 </html>
+<script>
+var searchModal = $("#search-count");
+var searchModalContent = $("<div>");
+
+$(document).on("click", "#new-scrape", function(event) {
+  // console.log("Count: " +count);
+  searchModalContent.html("<h1>Scrape Complete.</h1>");
+  $(".search-modal-content").empty();
+  $(".search-modal-content").append(searchModalContent);
+  searchModal.show();
+});
+
+$(".modal-close").click(function(event) {
+  searchModal.hide();
+  location.reload();
+});
+</script>

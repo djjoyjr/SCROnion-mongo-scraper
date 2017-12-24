@@ -134,21 +134,15 @@ app.get("/api/articles/:id", function(req, res) {
 
 //
 app.post("/api/saved/:id", function(req, res) {
-  console.log("ID being passed from button click: " + req.params.id);
   var newStatus = "";
   db.Article
   .findOne({_id: req.params.id})
   .then(function (dbArticle) {
-    console.log("This is that article's info:  " + dbArticle);
     if (dbArticle.saved == true) {
-      console.log("This article is saved");
       newStatus = false;
-      console.log("this should say false: " +newStatus);
     }
     else {
-      console.log("This article is not saved");
       newStatus = true;
-      console.log("This should say true: " + newStatus);
     };
   db.Article
     .update({"_id": req.params.id}, {$set: {saved:newStatus}})
@@ -160,6 +154,23 @@ app.post("/api/saved/:id", function(req, res) {
     });
   });
 });
+
+// Route for saving/updating an Article's associated Note
+app.post("/api/articles/:id", function(req, res) {
+  // Create a new note and pass the req.body to the entry
+  db.Note
+    .create(req.body)
+    .then(function(dbNote) {
+      return db.Article.findOneAndUpdate({ _id: req.params.id }, { note: dbNote._id }, { new: true });
+    })
+    .then(function(dbArticle) {
+      res.json(dbArticle);
+    })
+    .catch(function(err) {
+      res.json(err);
+    });
+});
+
 
 // Start the server
 app.listen(PORT, function() {

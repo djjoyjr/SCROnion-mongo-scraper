@@ -22,11 +22,11 @@ $.getJSON("/api/saved", function(data) {
   }
 });
 
-// Whenever someone clicks a p tag
+// Whenever someone clicks the Article Notes button
 $(document).on("click", "#article-notes", function() {
   // Empty the notes from the note section
   $("#notes").empty();
-  // Save the id from the p tag
+  // Save the id from the button
   var thisId = $(this).attr("data-id");
 
   // Now make an ajax call for the Article
@@ -54,6 +54,35 @@ $(document).on("click", "#article-notes", function() {
         $("#bodyinput").val(data.note.body);
       }
     });
+});
+
+$(document).on("click", "#savenote", function() {
+  // Grab the id associated with the article from the submit button
+  var thisId = $(this).attr("data-id");
+
+  // Run a POST request to change the note, using what's entered in the inputs
+  $.ajax({
+    method: "POST",
+    url: "/api/articles/" + thisId,
+    data: {
+      // Value taken from title input
+      title: $("#titleinput").val(),
+      // Value taken from note textarea
+      body: $("#bodyinput").val()
+    }
+  })
+    // With that done
+    .done(function(data) {
+      // Log the response
+      console.log(data);
+      // Empty the notes section
+      $("#notes").empty();
+    });
+
+  // Also, remove the values entered in the input and textarea for note entry
+  $("#titleinput").val("");
+  $("#bodyinput").val("");
+  console.log("input should be clear if this logs");
 });
 
 // When you click the save-status button

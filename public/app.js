@@ -4,9 +4,11 @@ var count = 0;
 $.getJSON("/api/articles", function(data) {
   // For each one
   for (var i = 0; i < data.length; i++) {
+    if (data[i].saved == false) {
     // Display the apropos information on the page
     $("#articles").append(`<button id="save-status" class="button is-medium" data-id=${data[i]._id}>Save Article</button>`);
-    $("#articles").append(`<a href=${ data[i].link}>${data[i].title}</a>`);
+  }
+    $("#articles").append(`<a href=${ data[i].link} target="_blank">${data[i].title}</a>`);
     $("#articles").append("<p>" + data[i].excerpt +"</p><hr>");
   }
   console.log("data.length of scrape:" +data.length);
@@ -15,7 +17,7 @@ $.getJSON("/api/articles", function(data) {
 
 $.getJSON("/api/saved", function(data) {
   for (var i = 0; i < data.length; i++) {
-      $("#saved").append(`<a href=${ data[i].link}>${data[i].title}</a>`);
+      $("#saved").append(`<a href=${ data[i].link} target="_blank">${data[i].title}</a>`);
       $("#saved").append(`<button id="save-status" class="button is-medium" data-id=${data[i]._id}>Delete From Saved</button>`);
       $("#saved").append(`<button id="article-notes" class="button is-medium" data-id=${data[i]._id}>Article Notes</button>`);
       $("#saved").append("<p>" + data[i].excerpt +"</p><hr>");
@@ -25,7 +27,7 @@ $.getJSON("/api/saved", function(data) {
 // Whenever someone clicks the Article Notes button
 $(document).on("click", "#article-notes", function() {
   // Empty the notes from the note section
-  $("#notes").empty();
+  // $("#notes").empty();
   // Save the id from the button
   var thisId = $(this).attr("data-id");
 
@@ -36,23 +38,28 @@ $(document).on("click", "#article-notes", function() {
   })
     // With that done, add the note information to the page
     .done(function(data) {
-      console.log(data);
-      // The title of the article
-      $("#notes").append("<h2>" + data.title + "</h2>");
-      // An input to enter a new title
-      $("#notes").append("<input id='titleinput' name='title' >");
-      // A textarea to add a new note body
-      $("#notes").append("<textarea id='bodyinput' name='body'></textarea>");
-      // A button to submit a new note, with the id of the article saved to it
+      $("#note-title").append("<h1>" +data.title+ "</h1>");
+      if (data.note) {
+        console.log(data.note);
+        console.log(data.note.length);
+        console.log(data.note.title);
+        console.log(data.note.body);
+        for (var i = 0; i < data.note.length; i++) {
+          data.note[i]
+          $("#saved-notes").append("<h2>" + data.note.title[i] + ": "  + data.note.body[i] + "</h2>");
+        }
+      }
+      $("#notes").append("<input id='titleinput' name='title' placeholder='Note Title'>");
+      $("#notes").append("<textarea id='bodyinput' name='body' placeholder='Note Body'></textarea>");
       $("#notes").append("<button data-id='" + data._id + "' id='savenote'>Save Note</button>");
 
-      // If there's a note in the article
-      if (data.note) {
-        // Place the title of the note in the title input
-        $("#titleinput").val(data.note.title);
-        // Place the body of the note in the body textarea
-        $("#bodyinput").val(data.note.body);
-      }
+      // // If there's a note in the article
+      // if (data.note) {
+      //   // Place the title of the note in the title input
+      //   $("#titleinput").val(data.note.title);
+      //   // Place the body of the note in the body textarea
+      //   $("#bodyinput").val(data.note.body);
+      // }
     });
 });
 
@@ -76,13 +83,13 @@ $(document).on("click", "#savenote", function() {
       // Log the response
       console.log(data);
       // Empty the notes section
-      $("#notes").empty();
+      // $("#notes").empty();
     });
 
   // Also, remove the values entered in the input and textarea for note entry
   $("#titleinput").val("");
   $("#bodyinput").val("");
-  console.log("input should be clear if this logs");
+  location.reload();
 });
 
 // When you click the save-status button

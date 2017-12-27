@@ -47,13 +47,15 @@ $(document).on("click", "#article-notes", function() {
       $("#note-title").append("<h1>" +data.title+ "</h1>");
       if (data.note) {
         for (var i = 0; i < data.note.length; i++) {
-          $("#saved-notes").append("<h2>" + data.note[i].body + "</h2>");
+          $("#saved-notes").append(`<h2> ${data.note[i].body}  <span><button id="delete-note" class="button is-small" data-id=${data.note[i]._id}>Delete</button></span></h2>`);
         }
       };
       $("#notes").append("<textarea id='bodyinput' name='body' placeholder='Note Body'></textarea>");
       $("#notes").append("<button data-id='" + thisId + "' id='savenote'>Save Note</button>");
     });
 });
+
+
 
 $(document).on("click", "#savenote", function() {
   // Grab the id associated with the article from the submit button
@@ -101,4 +103,22 @@ $(document).on("click", "#save-status", function() {
       console.log(data);
     });
 
+});
+
+$(document).on("click", "#delete-note", function() {
+  var thisId = $(this).attr("data-id");
+  $.ajax({
+    method: "DELETE",
+    url: "/api/articles/" + thisId,
+    data: {
+      id: thisId
+    }
+  })
+    // With that done
+    .done(function(data) {
+      location.reload();
+      console.log(data);
+    });
+
+  alert(thisId);
 });

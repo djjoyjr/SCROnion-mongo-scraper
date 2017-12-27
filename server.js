@@ -174,6 +174,23 @@ app.post("/api/articles/:id", function(req, res) {
     });
 });
 
+// Route for deleting a Note
+app.delete("/api/articles/:id", function(req, res) {
+  console.log("The note I want to delete req.params.id: " +req.params.id);
+  db.Note
+  .remove ({ _id:req.params.id})
+  .then(function(dbNote) {
+    return db.Article.findOneAndUpdate({ _id:req.params.id}, { $push: { note: dbNote._id } }, { new: true });
+  })
+  .then(function(dbArticle) {
+    res.json(dbArticle);
+  })
+  .catch(function(err) {
+    res.json(err);
+  });
+
+});
+
 
 // Start the server
 app.listen(PORT, function() {

@@ -4,14 +4,15 @@ var count = 0;
 $.getJSON("/api/articles", function(data) {
   // For each one
   for (var i = 0; i < data.length; i++) {
+    $("#articles").append(`<a href=${ data[i].link} target="_blank">${data[i].title}</a>`);
     if (data[i].saved == false) {
     // Display the apropos information on the page
     $("#articles").append(`<button id="save-status" class="button is-medium" data-id=${data[i]._id}>Save Article</button>`);
   }
-    $("#articles").append(`<a href=${ data[i].link} target="_blank">${data[i].title}</a>`);
+
     $("#articles").append("<p>" + data[i].excerpt +"</p><hr>");
   }
-  console.log("data.length of scrape:" +data.length);
+  // console.log("data.length of scrape:" +data.length);
   count = data.length;
 });
 
@@ -27,9 +28,10 @@ $.getJSON("/api/saved", function(data) {
 // Whenever someone clicks the Article Notes button
 $(document).on("click", "#article-notes", function() {
   // Empty the notes from the note section
-  // $("#notes").empty();
+  $("#notes").empty();
   // Save the id from the button
   var thisId = $(this).attr("data-id");
+  console.log("This is the id it displays: " +thisId);
 
   // Now make an ajax call for the Article
   $.ajax({
@@ -38,28 +40,18 @@ $(document).on("click", "#article-notes", function() {
   })
     // With that done, add the note information to the page
     .done(function(data) {
+      console.log("this is data.title:  " +data.title);
+      console.log("this is data._id:  " +data._id);
+      console.log("this is data:  " +data);
+
       $("#note-title").append("<h1>" +data.title+ "</h1>");
       if (data.note) {
-        console.log(data.note);
-        console.log(data.note.length);
-        console.log(data.note.title);
-        console.log(data.note.body);
         for (var i = 0; i < data.note.length; i++) {
-          data.note[i]
-          $("#saved-notes").append("<h2>" + data.note.title[i] + ": "  + data.note.body[i] + "</h2>");
+          $("#saved-notes").append("<h2>" + data.note[i].body + "</h2>");
         }
-      }
-      $("#notes").append("<input id='titleinput' name='title' placeholder='Note Title'>");
+      };
       $("#notes").append("<textarea id='bodyinput' name='body' placeholder='Note Body'></textarea>");
-      $("#notes").append("<button data-id='" + data._id + "' id='savenote'>Save Note</button>");
-
-      // // If there's a note in the article
-      // if (data.note) {
-      //   // Place the title of the note in the title input
-      //   $("#titleinput").val(data.note.title);
-      //   // Place the body of the note in the body textarea
-      //   $("#bodyinput").val(data.note.body);
-      // }
+      $("#notes").append("<button data-id='" + thisId + "' id='savenote'>Save Note</button>");
     });
 });
 
@@ -68,12 +60,11 @@ $(document).on("click", "#savenote", function() {
   var thisId = $(this).attr("data-id");
 
   // Run a POST request to change the note, using what's entered in the inputs
+  console.log("this is the id of what's being updated on save note:" + thisId);
   $.ajax({
     method: "POST",
     url: "/api/articles/" + thisId,
     data: {
-      // Value taken from title input
-      title: $("#titleinput").val(),
       // Value taken from note textarea
       body: $("#bodyinput").val()
     }
@@ -87,7 +78,6 @@ $(document).on("click", "#savenote", function() {
     });
 
   // Also, remove the values entered in the input and textarea for note entry
-  $("#titleinput").val("");
   $("#bodyinput").val("");
   location.reload();
 });

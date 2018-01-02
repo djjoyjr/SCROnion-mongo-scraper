@@ -134,7 +134,6 @@ app.get("/api/articles/:id", function(req, res) {
     });
 });
 
-
 app.post("/api/saved/:id", function(req, res) {
   var newStatus = "";
   db.Article

@@ -2,25 +2,30 @@ var count = 0;
 
 // Grab the articles as a json
 $.getJSON("/api/articles", function(data) {
+  console.log(data.length);
+  if (data.length !==0) {
   // For each one
   for (var i = 0; i < data.length; i++) {
-    $("#articles").append(`<a href=${ data[i].link} target="_blank">${data[i].title}</a>`);
     if (data[i].saved == false) {
     // Display the apropos information on the page
     $("#articles").append(`<button id="save-status" class="button is-medium" data-id=${data[i]._id}>Save Article</button>`);
   }
-
-    $("#articles").append("<p>" + data[i].excerpt +"</p><hr>");
+  $("#articles").append(`<a href=${ data[i].link} target="_blank">${data[i].title}</a>`);
+  $("#articles").append("<p>" + data[i].excerpt +"</p><hr>");
   }
   // console.log("data.length of scrape:" +data.length);
   count = data.length;
+  }
+  else {
+    $("#articles").append("<h1> You don't currently have any articles.  Click the Scrape New Articles button above to get started.</h1>");
+  };
 });
 
 $.getJSON("/api/saved", function(data) {
   for (var i = 0; i < data.length; i++) {
-      $("#saved").append(`<a href=${ data[i].link} target="_blank">${data[i].title}</a>`);
       $("#saved").append(`<button id="save-status" class="button is-medium" data-id=${data[i]._id}>Delete From Saved</button>`);
-      $("#saved").append(`<button id="article-notes" class="button is-medium" data-id=${data[i]._id}>Article Notes</button>`);
+      $("#saved").append(`<button id="article-notes" class="button is-medium" data-id=${data[i]._id}>Article Notes</button><br>`);
+      $("#saved").append(`<a href=${ data[i].link} target="_blank">${data[i].title}</a>`);
       $("#saved").append("<p>" + data[i].excerpt +"</p><hr>");
   }
 });
@@ -40,9 +45,9 @@ $(document).on("click", "#article-notes", function() {
   })
     // With that done, add the note information to the page
     .done(function(data) {
-      console.log("this is data.title:  " +data.title);
-      console.log("this is data._id:  " +data._id);
-      console.log("this is data:  " +data);
+      // console.log("this is data.title:  " +data.title);
+      // console.log("this is data._id:  " +data._id);
+      // console.log("this is data:  " +data);
 
       $("#note-title").append("<h1>" +data.title+ "</h1>");
       if (data.note) {
@@ -54,8 +59,6 @@ $(document).on("click", "#article-notes", function() {
       $("#notes").append("<button data-id='" + thisId + "' id='savenote'>Save Note</button>");
     });
 });
-
-
 
 $(document).on("click", "#savenote", function() {
   // Grab the id associated with the article from the submit button

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Scraping the Onion With Mongoose</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="app.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.1/css/bulma.css">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Gravitas+One" rel="stylesheet">
+  </head>
+  <body>
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a class="navbar-item" href="/">
+        <img src="./images/onionlogo.png" alt="The SCRonion - or scraped Onion" width="112" height="28">
+        </a>
+        <div class="navbar-start">
+  			<span><a href="/"><button class="button is-success is-medium" id="home">Home</button></span>
+  			<span><a href="/saved"><button class="button is-success is-medium" id="saved-articles">Saved Articles</button></a></span>
+  			<span><a href="/scrape"><button class="button is-success is-medium" id="new-scrape">Scrape New Articles</button></a></span>
+  		  </div>
+      </div>
+    </nav>
+
+
+
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title">
+          The SCROnion
+        </h1>
+        <h2 class="subtitle">
+          America's Finest News Scrapings
+        </h2>
+      </div>
+    </div>
+  </section>
+
+  <div class="columns">
+    <div class="column is-narrow"></div>
+    <div class="column">
+      <div id="articles"></div>
+    </div>
+    <div class="column is-narrow"></div>
+  </div>
+
+      <!--Search Confirmation Modal -->
+  <div id="search-count" class="modal">
+    <div class="modal-background">
+      <div class="modal-card">
+        <title>Search Results Count</title>
+        <div class="modal-content">
+        </div>
+      </div>
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+  </div>
+
+  {{{body}}}
+
+  </body>
+</html>
+<script>
+var searchModal = $("#search-count");
+var searchModalContent = $("<div>");
+
+$(document).on("click", "#new-scrape", function(event) {
+  console.log("Count: " +count);
+  searchModalContent.html("<h1>Scrape Complete.</h1>");
+  $(".modal-content").empty();
+  $(".modal-content").append(searchModalContent);
+  searchModal.show();
+});
+
+$(".modal-close").click(function(event) {
+  searchModal.hide();
+  location.reload();
+});
+</script>

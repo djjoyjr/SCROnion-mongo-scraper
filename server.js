@@ -35,9 +35,6 @@ app.set("view engine", "handlebars");
 
 var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/djmongoscraper_db";
 
-console.log(process.env.MONGODB_URI);
-
-
 // Set mongoose to leverage built in JavaScript ES6 Promises
 // Connect to the Mongo DB
 mongoose.Promise = Promise;
@@ -55,7 +52,7 @@ app.get("/saved", function (req, res) {
   res.sendFile(path.join(__dirname, "./public/saved.html"));
 });
 
-var count = 0;
+// var count = 0;
 // A GET route for scraping the echojs website
 app.get("/scrape", function(req, res) {
   // First, we grab the body of the html with request
@@ -84,18 +81,19 @@ app.get("/scrape", function(req, res) {
 
       // Create a new Article using the `result` object built from scraping
       db.Article
-        .create(result)
+        .findOne({title:result.title})
         .then(function (dbArticle) {
-          // If we were able to successfully scrape and save an Article, send a message to the client
+          if (dbArticle == null ||  dbArticle.title!==result.title) {
+            db.Article.create(result)
+          }
         })
         .catch(function(err) {
           // If an error occurred, send it to the client
           res.json(err);
         });
-        count = i+1;
+        // count = i+1;
     });
-    console.log("Number of articles scraped: " + count);
-    // res.redirect("/");
+    // console.log("Number of articles scraped: " + count);
   });
 });
 
@@ -200,6 +198,7 @@ app.delete("/api/articles/:id", function(req, res) {
   });
 
 });
+
 
 
 // Start the server

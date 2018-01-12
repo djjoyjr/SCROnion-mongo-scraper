@@ -52,7 +52,6 @@ app.get("/saved", function (req, res) {
   res.sendFile(path.join(__dirname, "./public/saved.html"));
 });
 
-// var count = 0;
 // A GET route for scraping the echojs website
 app.get("/scrape", function(req, res) {
   // First, we grab the body of the html with request
@@ -83,7 +82,7 @@ app.get("/scrape", function(req, res) {
       db.Article
         .findOne({title:result.title})
         .then(function (dbArticle) {
-          if (dbArticle == null ||  dbArticle.title!==result.title) {
+          if (dbArticle.title!==result.title ||  dbArticle == null) {
             db.Article.create(result)
           }
         })
@@ -91,9 +90,7 @@ app.get("/scrape", function(req, res) {
           // If an error occurred, send it to the client
           res.json(err);
         });
-        // count = i+1;
     });
-    // console.log("Number of articles scraped: " + count);
   });
 });
 
@@ -103,6 +100,7 @@ app.get("/api/articles", function(req, res) {
   db.Article
     .find({})
     .then(function(dbArticle) {
+      // console.log("dbArticle.length: " +dbArticle.length);
       // If we were able to successfully find Articles, send them back to the client
       res.json(dbArticle);
     })
@@ -196,10 +194,7 @@ app.delete("/api/articles/:id", function(req, res) {
   .catch(function(err) {
     res.json(err);
   });
-
 });
-
-
 
 // Start the server
 app.listen(PORT, function() {

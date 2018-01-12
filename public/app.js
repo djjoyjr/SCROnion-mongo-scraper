@@ -1,20 +1,15 @@
-var count = 0;
-
 // Grab the articles as a json
 $.getJSON("/api/articles", function(data) {
-  console.log(data.length);
   if (data.length !==0) {
   // For each one
-  for (var i = 0; i < data.length; i++) {
-    if (data[i].saved == false) {
-    // Display the apropos information on the page
-    $("#articles").append(`<button id="save-status" class="button is-medium" data-id=${data[i]._id}>Save Article</button>`);
-  }
-  $("#articles").append(`<a href=${ data[i].link} target="_blank">${data[i].title}</a>`);
-  $("#articles").append("<p>" + data[i].excerpt +"</p><hr>");
-  }
-  // console.log("data.length of scrape:" +data.length);
-  count = data.length;
+    for (var i = 0; i < data.length; i++) {
+      if (data[i].saved == false) {
+      // Display the apropos information on the page
+      $("#articles").append(`<button id="save-status" class="button is-medium" data-id=${data[i]._id}>Save Article</button>`);
+    }
+    $("#articles").append(`<a href=${ data[i].link} target="_blank">${data[i].title}</a>`);
+    $("#articles").append("<p>" + data[i].excerpt +"</p><hr>");
+    }
   }
   else {
     $("#articles").append("<h1> You don't currently have any articles.  Click the Scrape New Articles button above to get started.</h1>");
@@ -36,7 +31,7 @@ $(document).on("click", "#article-notes", function() {
   $("#notes").empty();
   // Save the id from the button
   var thisId = $(this).attr("data-id");
-  console.log("This is the id it displays: " +thisId);
+  // console.log("This is the id it displays: " +thisId);
 
   // Now make an ajax call for the Article
   $.ajax({
@@ -45,10 +40,6 @@ $(document).on("click", "#article-notes", function() {
   })
     // With that done, add the note information to the page
     .done(function(data) {
-      // console.log("this is data.title:  " +data.title);
-      // console.log("this is data._id:  " +data._id);
-      // console.log("this is data:  " +data);
-
       $("#note-title").append("<h1>" +data.title+ "</h1>");
       if (data.note) {
         for (var i = 0; i < data.note.length; i++) {
@@ -122,6 +113,4 @@ $(document).on("click", "#delete-note", function() {
       location.reload();
       console.log(data);
     });
-
-  alert(thisId);
 });
